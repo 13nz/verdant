@@ -55,7 +55,7 @@ Displays restaurant menus grouped into categories with:
 - Price
 - Availability status
 
-![Menu Screen](./assets/screenshots/menu.png)
+![Menu Screen](./assets/screenshots/menu.PNG)
 
 ---
 
