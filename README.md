@@ -1,6 +1,6 @@
 # Verdant
 
-![Home Screen](./assets/screenshots/home.png)
+![Home Screen](./assets/screenshots/home.PNG)
 
 Verdant is a React Native prototype of a plant-based food delivery application developed as part of a Mobile Development university assignment. The project demonstrates mobile UI design, reusable components, navigation, and dynamic rendering of restaurant and menu data using React Native and Expo.
 
@@ -55,7 +55,7 @@ Displays restaurant menus grouped into categories with:
 - Price
 - Availability status
 
-![Menu Screen](./assets/screenshots/menu.png)
+![Menu Screen](./assets/screenshots/menu.PNG)
 
 ---
 
