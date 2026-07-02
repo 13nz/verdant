@@ -1,64 +1,70 @@
 import {
-  ScrollView,
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Alert,
+    ScrollView,
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    Alert,
 } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
-  TableView,
-  Section,
-  Cell,
+    TableView,
+    Section,
+    Cell,
 } from "react-native-tableview-simple";
+
 import React, { useLayoutEffect } from "react";
 
+// create the navigation stack used by the application
 const Stack = createNativeStackNavigator();
 
+// reusable custom cell used to display each restaurant on the home screen
 const HomeScreenCell = (props) => {
-  return (
-    <Cell
-		{...props}
-		onPress={props.action}
-		cellStyle="Basic"
-		backgroundColor="transparent"
-		highlightUnderlayColor="#ccc"
-		style={styles.cell}
-		cellContentView={
-			<View>
-				<View style={styles.imageContainer}>
-					<Image
-						source={props.imgUri}
-						style={styles.image}
-						resizeMode="cover"
-					/>
+    return (
+        <Cell
+            {...props}
+            onPress={props.action}
+            cellStyle="Basic"
+            backgroundColor="transparent"
+            highlightUnderlayColor="#ccc"
+            style={styles.cell}
+            cellContentView={
+                <View>
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={props.imgUri}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />
 
-					<View style={styles.etaBox}>
-						<Text style={styles.etaText}>
-							{props.eta} min
-						</Text>
-					</View>
-				</View>
+                        <View style={styles.etaBox}>
+                            <Text style={styles.etaText}>
+                                {props.eta} min
+                            </Text>
+                        </View>
+                    </View>
 
-				<Text style={styles.title}>
-					{props.title}
-				</Text>
+                    <Text style={styles.title}>
+                        {props.title}
+                    </Text>
 
-				<Text style={styles.restaurantInfo}>
-					{props.rating} 🌱 • {props.delivery}
-				</Text>
+                    <Text style={styles.restaurantInfo}>
+                        {props.rating} 🌱 • {props.delivery}
+                    </Text>
 
-				<Text style={styles.tagline}>
-					{props.tagline}
-				</Text>
-			</View>
-		}	
-    />
-  );
+                    <Text style={styles.tagline}>
+                        {props.tagline}
+                    </Text>
+                </View>
+            }	
+        />
+    );
 };
 
+// hard-coded restaurant data used to populate the application
+// in a production application this data would come from an api or database
 const restaurants = [
     {
         title: "Green Garden",
@@ -67,6 +73,7 @@ const restaurants = [
         delivery: "Free Delivery",
         eta: "10-20",
         image: require("./assets/images/green_garden.jpg"),
+        // menu sections and items for this restaurant
         menu: [
             {
                 title: "Salads",
@@ -472,43 +479,47 @@ const restaurants = [
     }
 ];
 
+// displays the list of available restaurants
 function HomeScreen({ navigation }) {
-  return (
-    <ScrollView>
-      <TableView>
-        <Section
-			header=""
-			hideSeparator
-			separatorTintColor="#ccc"
-        >
-			{
-				restaurants.map((restaurant, index) => (
-					<HomeScreenCell
-						key={index}
-						title={restaurant.title}
-						tagline={restaurant.tagline}
-						eta={restaurant.eta}
-						imgUri={restaurant.image}
-						rating={restaurant.rating}
-						delivery={restaurant.delivery}
-						action={() =>
-							navigation.navigate("Menu", {
-								title: restaurant.title,
-								items: restaurant.menu
-							})
-						}
-					/>
-				))
-			}
-        </Section>
-      </TableView>
-    </ScrollView>
-  );
+    return (
+        <ScrollView>
+            <TableView>
+                <Section
+                    header=""
+                    hideSeparator
+                    separatorTintColor="#ccc"
+                >
+                    {
+                        // dynamically generate a restaurant card for each restaurant
+                        restaurants.map((restaurant, index) => (
+                            <HomeScreenCell
+                                key={index}
+                                title={restaurant.title}
+                                tagline={restaurant.tagline}
+                                eta={restaurant.eta}
+                                imgUri={restaurant.image}
+                                rating={restaurant.rating}
+                                delivery={restaurant.delivery}
+                                action={() =>
+                                    navigation.navigate("Menu", {
+                                        title: restaurant.title,
+                                        items: restaurant.menu
+                                    })
+                                }
+                            />
+                        ))
+                    }
+                </Section>
+            </TableView>
+        </ScrollView>       
+    );
 }
 
+// displays the selected restaurant menu
 function MenuScreen({ route, navigation }) {  
 	const { title, items } = route.params;
 
+    // update the navigation title using the selected restaurant name
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			title: title
@@ -533,20 +544,24 @@ function MenuScreen({ route, navigation }) {
 	return (
 		<ScrollView>
 			<TableView>
+                {/* dynamically generate each menu section */}
 				{items.map((section, index) => (
 				<Section
 					key={index}
 					header={section.title}
 				>
+                    {/*  dynamically generate each menu item within the section */}
 					{section.contents.map((item, i) => (
 						<Cell
 							key={i}
 							cellStyle="Basic"
+                            // only allow available menu items to be selected
 							onPress={() => {
 								if (!item.available) {
 									return;
 								}
 
+                                // display basic information about the selected menu item
 								Alert.alert(
 									item.title,
 									`${item.price}\n\n${item.subtitle}`
@@ -601,27 +616,29 @@ function MenuScreen({ route, navigation }) {
 	);
 }
 
+// main application component containing the navigation container
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-			name="Verdant - Plant-Based Restaurants"
-			component={HomeScreen}
-        />
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="Verdant - Plant-Based Restaurants"
+                    component={HomeScreen}
+                />
 
-        <Stack.Screen
-			name="Menu"
-			component={MenuScreen}
-			options={{
-				headerBackTitle: "Back"
-			}}
-		/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+                <Stack.Screen
+                    name="Menu"
+                    component={MenuScreen}
+                    options={{
+                        headerBackTitle: "Back"
+                    }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
 
+// application styles
 const styles = StyleSheet.create({
     cell: {
         height: 340,
